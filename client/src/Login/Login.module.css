@@ -15,17 +15,43 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        
+        @media screen and (max-width: 1065px){
+            width: 60%;
+            height: 60%;
+            border: 15px solid var(--Elements);
+        }
+        @media screen and (max-width: 820px){
+            height: 80%;
+            flex-direction: column;
+        }
+        @media screen and (max-width: 600px){
+            width: 80%;
+            border: 10px solid var(--Elements);
+            border-radius: 100px;
+        }
+
         .loginBodyTitle {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+
+            @media screen and (max-width: 820px){
+                height: 50%;
+            }
+
             h1 {
                 color: var(--Elements);
                 font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                 letter-spacing: 5px;
                 font-size: 40px;
+
+                @media screen and (max-width: 1065px){
+                    letter-spacing: 3px;
+                    font-size: 30px;    
+                }
             }
         }
         .loginBodyFields {
@@ -35,11 +61,20 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            @media screen and (max-width: 820px){
+                height: 120%;
+                justify-content: start;
+            }
             h2 {
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                 font-size: 35px;
                 color: var(--SecondaryEl);
                 letter-spacing: 3px;
+
+                @media screen and (max-width: 1065px){
+                    letter-spacing: 2px;
+                    font-size: 30px;    
+                }
             }
             input {
                 width: 300px;
@@ -51,6 +86,12 @@
                 font-size: 20px;
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                 color: var(--Elements);
+
+                @media screen and (max-width: 1065px){
+                    width: 200px;
+                    height: 15px;  
+                    font-size: 15px;
+                }
             }
             .loginBodyFieldsDown {
                 width: 55%;
@@ -58,22 +99,63 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                gap: 20px;
+
+                @media screen and (max-width: 1300px){
+                    width: 70%;
+                }
+                @media screen and (max-width: 1065px){
+                    width: 40%;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                }
+                @media screen and (max-width: 1000px){
+                    width: 50%;
+                }
+                @media screen and (max-width: 820px){
+                    width: 70%;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                }
+                @media screen and (max-width: 727px){
+                    width: 100%;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                }
+
                 .loginBodyFieldsDownRemember {
                     width: 100%;
                     display: flex;
                     flex-direction: row;
                     align-items: center;
                     gap: 10px;
+                    @media screen and (max-width: 727px){
+                       justify-content: center;
+                    }
                     span {
                         display: flex;
                         align-items: center;
                         margin-top: 10px;
                         color: var(--Elements);
+
+                        @media screen and (max-width: 1300px) {
+                            font-size: 15px;    
+                        }
                     }
                 }
                 .loginBodyRadio {
                     width: 20px;
                     cursor: pointer;
+
+                    @media screen and (max-width: 1300px) {
+                        width: 15px;    
+                    }
                 }
                 .loginBodyLink {
                     width: 70%;
@@ -82,6 +164,21 @@
                     display: flex;
                     align-items: center;
                     margin-top: 10px;
+
+                    @media screen and (max-width: 1300px) {
+                        width: 100%;
+                        font-size: 15px;    
+                    }
+                    @media screen and (max-width: 1065px) {
+                        margin-bottom: 5px;   
+                    }
+                    @media screen and (max-width: 820px) {
+                        width: 50%;  
+                    }
+                    @media screen and (max-width: 727px){
+                        width: 100%;
+                        justify-content: center;
+                    }
                 }
             }
             .loginBodyButton {
@@ -115,10 +212,24 @@
         gap: 15px;
         p {
             color: var(--Elements);
+
+            @media screen and (max-width: 600px){
+                font-size: 15px;
+            }
+            @media screen and (max-width: 360px){
+                font-size: 13px;
+            }
         }
         .loginBackToRagistrationLink {
             text-decoration: none;
-            color: var(--SecondaryEl)
+            color: var(--SecondaryEl);
+
+            @media screen and (max-width: 600px){
+                font-size: 15px;
+            }
+            @media screen and (max-width: 360px){
+                font-size: 13px;
+            }
         }
     }
 };
