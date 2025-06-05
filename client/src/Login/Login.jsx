@@ -22,6 +22,7 @@ export default function Login() {
             <input 
                 className={classes.input}
                 type="text"
+                placeholder='Username'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -29,6 +30,7 @@ export default function Login() {
             <input 
                 className={classes.loginBodyFields}
                 type='password'
+                placeholder='Password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -45,7 +47,7 @@ export default function Login() {
               </div>
                 <Link
                   className={classes.loginBodyLink}
-                  to='Forgot'
+                  to='/Forgot'
                 >Forgot password</Link>
             </div>
             <div className={classes.loginBodyButton}> 
@@ -57,7 +59,7 @@ export default function Login() {
         <p>If you haven't registered yet, click here</p>
         <Link
           className={classes.loginBackToRagistrationLink}
-          to='Registration'
+          to='/Registration'
         >Registration</Link>
       </div>
     </div>
