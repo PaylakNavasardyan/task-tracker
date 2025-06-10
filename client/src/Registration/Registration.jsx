@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import classes from './Registration.module.css';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -9,10 +10,48 @@ export default function Login() {
     const [repPassword, SetRepPassword] = useState('');
     const [remember, setRemember] = useState(false);
 
+    const emailRef = useRef();
+    const nameInputRef = useRef();
+    const passwordInputRef = useRef();
+    const repPasswordInputRef = useRef();
+
+    const handleKeyDown = (e, nextRef) => {
+      if (e.key === 'Enter') 
+      {
+        e.preventDefault();
+        nextRef?.current?.focus()
+      }
+    };
+
     const handleClik = () => {
       setRemember(!remember)
     };
-    console.log(setEmail)
+
+    const payload = {
+      email,
+      name,
+      password,
+      repPassword,
+      remember
+    };
+
+    const handleSubmit = async() => {
+      try {
+        document.cookie = `email=${email}; path=/`;
+        document.cookie = `name=${name}; path=/`;
+        document.cookie = `remember me=${remember}; path=/`;
+
+        setEmail('');
+        setName('');
+        setPassword('');
+        SetRepPassword('');
+        setRemember(false);
+
+        await axios.post('http://localhost:5000/Registration', payload);
+      }catch(error) {
+        console.log('error', error)
+      }
+    }
 
   return (
     <div className={classes.login}>
@@ -28,6 +67,8 @@ export default function Login() {
                 placeholder='Email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
+                ref={emailRef}
                 required
             />
             <input 
@@ -36,6 +77,8 @@ export default function Login() {
                 placeholder='Username'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, passwordInputRef)}
+                ref={nameInputRef}
                 required
             />
             <input 
@@ -44,6 +87,8 @@ export default function Login() {
                 placeholder='Password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, repPasswordInputRef)}
+                ref={passwordInputRef}
                 required
             />
              <input 
@@ -52,6 +97,8 @@ export default function Login() {
                 placeholder='Repeat Password'
                 value={repPassword}
                 onChange={(e) => SetRepPassword(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, null)}
+                ref={repPasswordInputRef}
                 required
             />
             <div className={classes.loginBodyFieldsDown}>
@@ -65,9 +112,11 @@ export default function Login() {
                 <span>Remember me</span>  
               </div>
             </div>
-            <div className={classes.loginBodyButton}> 
-              <button>Login</button>
-            </div>
+            <form onSubmit={handleSubmit}>
+              <div className={classes.loginBodyButton}> 
+                <button type='submit'>Login</button>
+              </div>
+            </form>
         </div>
       </div>
       <div className={classes.loginBackToLogin}>
