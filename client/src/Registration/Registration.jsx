@@ -46,9 +46,9 @@ export default function Login() {
       let nameFirstChar = name.charAt(0).toLowerCase();
       let nameChars = '';
 
-      for (let i = 0; i < password.length; i++) {
+      for (let i = 0; i < name.length; i++) {
         if (name[i].toLowerCase() === nameFirstChar) {
-          nameChars += password[i];
+          nameChars += name[i];
         };
 
         if (nameChars.length === name.length) {
@@ -62,8 +62,8 @@ export default function Login() {
         return 'Your name must contain only Latin letters and numbers'
       } else if (name.length < 3) {
         return 'Your name cannot contain fewer than 4 characters'
-      } else if (name.length > 10) {
-        return 'Your name cannot contain more than 10 charactes'
+      } else if (name.length > 15) {
+        return 'Your name cannot contain more than 15 charactes'
       }
       return '';
     }
