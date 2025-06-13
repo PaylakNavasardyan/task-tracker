@@ -1,11 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import bcryptjs from 'bcryptjs';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5050;
+const saltԼevel  = 10;
 
 app.use(cors());
 app.use(express.json());
@@ -55,7 +57,7 @@ app.get('/', (req, res) => {
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Password</th>
+                                <th>Hashed Password</th>
                                 <th>Remember</th>
                             </tr>
                         </thead>
@@ -71,20 +73,37 @@ app.get('/', (req, res) => {
     }
 });
 
-app.post('/Registration', (req, res) => {
+app.post('/Registration', async(req, res) => {
     const { email, name, password, repPassword, remember } = req.body;
 
     if (email && name && password && repPassword) {
     const newUser = { email, name, password, repPassword, remember };
-    users.push(newUser);
-    console.log('All users now:', users); 
+        
+        try {
+        const hashedPassword = await bcryptjs.hash(password, saltԼevel);
 
-    return res.status(201).json({ message: 'User registered', user: newUser });
+        const newUser = {
+            email,
+            name,
+            password: hashedPassword,
+            remember
+        };
+
+        users.push(newUser);
+        console.log('All users now:', users); 
+    
+        return res.status(201).json({ message: 'User registered', user: newUser });
+
+    } catch(error) {
+        console.error('Error hashing password', error);
+        res.status(500).send('Server error')
+    }
+
     } else {
     return res.status(400).json({ error: 'Missing required fields' });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
