@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import classes from './Login.module.css';
 import { Link } from 'react-router-dom';
 
@@ -7,6 +7,16 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
 
+    const nameInputRef = useRef();
+    const passwordInputRef = useRef();
+
+    const handleKeyDown = (e, nextRef) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        nextRef?.current?.focus();
+      }
+    };
+    
     const handleClik = () => {
       setRemember(!remember)
     };
@@ -25,6 +35,8 @@ export default function Login() {
                 placeholder='Username'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, passwordInputRef)}
+                ref={nameInputRef}
                 required
             />
             <input 
@@ -33,6 +45,8 @@ export default function Login() {
                 placeholder='Password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, undefined)}
+                ref={passwordInputRef}
                 required
             />
             <div className={classes.loginBodyFieldsDown}>
