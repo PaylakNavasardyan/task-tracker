@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import classes from './Registration.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
@@ -15,10 +15,14 @@ export default function Login() {
     const [passwordError, setPasswordError] = useState('');
     const [repPasswordError, SetRepPasswordError] = useState('');
 
+    const [existedEmailError, setExistedEmailError] = useState('');
+
     const emailRef = useRef();
     const nameInputRef = useRef();
     const passwordInputRef = useRef();
     const repPasswordInputRef = useRef();
+
+    const navigate = useNavigate();
 
     const handleKeyDown = (e, nextRef) => {
       if (e.key === 'Enter') {
@@ -131,24 +135,35 @@ export default function Login() {
       };
 
       try {
-        document.cookie = `email=${email}; path=/`;
-        document.cookie = `name=${name}; path=/`;
-        document.cookie = `remember me=${remember}; path=/`;
+        const res = await axios.post('http://localhost:5000/Registration', payload);  
 
-        setEmail('');
-        setName('');
-        setPassword('');
-        SetRepPassword('');
-        setRemember(false);
+        if (res.status === 201) {
+          document.cookie = `email=${email}; path=/`;
+          document.cookie = `name=${name}; path=/`;
+          document.cookie = `remember me=${remember}; path=/`;
+  
+          setEmail('');
+          setName('');
+          setPassword('');
+          SetRepPassword('');
+          setRemember(false);
 
-        await axios.post('http://localhost:5000/Registration', payload);
+          navigate('/Tasks');
+        }
       } catch(error) {
-        console.log('error', error)
+        if (error.response && (error.response.status === 409 || error.response.status === 503)) {
+          setExistedEmailError(error.response.data.message);
+        } else {
+          setExistedEmailError('Network error or server not responding')
+        }
+
+        console.log('error', error);
       }
     }
 
   return (
     <div className={classes.login}>
+      {existedEmailError && <p className={classes.loginError}>{existedEmailError}</p>}
       <div className={classes.loginBody}>
         <div className={classes.loginBodyTitle}>
           <h1>Task Tracker</h1>
@@ -220,7 +235,7 @@ export default function Login() {
                 </div>
               </div>
               <div className={classes.loginBodyButton}> 
-                <button type='submit'>Login</button>
+                <button type='submit'>Registration</button>
               </div>
             </form>
         </div>
