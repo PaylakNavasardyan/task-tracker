@@ -77,30 +77,38 @@ app.post('/Registration', async(req, res) => {
     const { email, name, password, repPassword, remember } = req.body;
 
     if (email && name && password && repPassword) {
-    const newUser = { email, name, password, repPassword, remember };
-        
         try {
-        const hashedPassword = await bcryptjs.hash(password, saltԼevel);
+            const hashedPassword = await bcryptjs.hash(password, saltԼevel);
+            
+            const newUser = {
+                email,
+                name,
+                password: hashedPassword,
+                remember
+            };
 
-        const newUser = {
-            email,
-            name,
-            password: hashedPassword,
-            remember
-        };
-
-        users.push(newUser);
-        console.log('All users now:', users); 
-    
-        return res.status(201).json({ message: 'User registered', user: newUser });
-
-    } catch(error) {
-        console.error('Error hashing password', error);
-        res.status(500).send('Server error')
-    }
-
+            const userEmails = new Set(users.map(u => u.email));
+            const userNames = new Set(users.map(u => u.name));
+            
+            if (!userEmails.has(newUser.email) && !userNames.has(newUser.name)) {
+                users.push(newUser);
+                console.log('All users now:', users);
+                console.log('User registered:', newUser);
+ 
+                return res.status(201).json({message: 'User registered succesfully'});
+            } else if (userEmails.has(newUser.email)) {
+                return res.status(409).json({message: 'Email already exist'});
+            } else if (userNames.has(newUser.name)) {
+                return res.status(409).json({message: 'Name already exist'});
+            } else {
+                return res.status(503).json({message: 'Something went wrong. Please try later!'});
+            }
+        } catch(error) {
+            console.error('Error hashing password', error);
+            res.status(500).send('Server error')
+        }
     } else {
-    return res.status(400).json({ error: 'Missing required fields' });
+        return res.status(400).json({ error: 'Missing required fields' });
     }
 });
 
