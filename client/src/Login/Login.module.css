@@ -7,6 +7,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    .loginError {
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        color: var(--Error);
+        font-size: 25px;
+
+        @media screen and (max-width: 820px){
+            font-size: 20px;
+        }
+    }
     .loginBody {
         width: 70%;
         height: 70%;
@@ -104,47 +113,28 @@
                 transition: background-color 5000s ease-in-out 0s;
             }   
             .loginBodyFieldsDown {
-                width: 55%;
+                width: 100%;
                 height: auto;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 gap: 20px;
 
-                @media screen and (max-width: 1300px){
-                    width: 70%;
-                }
                 @media screen and (max-width: 1065px){
-                    width: 40%;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
                     gap: 5px;
                 }
-                @media screen and (max-width: 1000px){
-                    width: 50%;
-                }
-                @media screen and (max-width: 820px){
-                    width: 70%;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 5px;
-                }
-                @media screen and (max-width: 727px){
-                    width: 100%;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 5px;
-                }
-
                 .loginBodyFieldsDownRemember {
                     width: 100%;
+                    height: auto;
                     display: flex;
                     flex-direction: row;
                     align-items: center;
+                    justify-content: center;
                     gap: 10px;
+
                     @media screen and (max-width: 727px){
                        justify-content: center;
                     }
@@ -173,6 +163,7 @@
                     text-decoration: none;
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     margin-top: 10px;
 
                     @media screen and (max-width: 1300px) {
