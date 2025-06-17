@@ -1,12 +1,16 @@
 import { useState, useRef } from 'react';
 import classes from './Login.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
+
+    const [loginError, setLoginError] = useState('');
+
+    const navigate = useNavigate();
 
     const nameInputRef = useRef();
     const passwordInputRef = useRef();
@@ -32,17 +36,32 @@ export default function Login() {
       e.preventDefault();
 
       try {
-        document.cookie = `name=${name}; path=/`;
-        document.cookie = `remember me=${remember}; path=/`;
+        const res = await axios.post('http://localhost:5000/Login', payload)
 
-        await axios.post('http://localhost:5000/Login', payload)
+        if (res.status === 201) {
+          document.cookie = `name=${name}; path=/`;
+          document.cookie = `remember me=${remember}; path=/`;
+
+          setName('');
+          setPassword('');
+          setRemember(false);
+
+          navigate('/Tasks');
+         } 
       } catch(error) {
+        if (error.response && [400, 401, 404].includes(error.response.status)) {
+          setLoginError(error.response.data.message);
+        } else {
+          setLoginError('Network error or server not responding');
+        }
+
         console.error('error', error)
       }
     }
     
   return (
     <div className={classes.login}>
+      {loginError && <p className={classes.loginError}>{loginError}</p>}
       <div className={classes.loginBody}>
         <div className={classes.loginBodyTitle}>
             <h1>Task Tracker</h1>
