@@ -95,13 +95,13 @@ app.post('/Registration', async(req, res) => {
                 console.log('All users now:', users);
                 console.log('User registered:', newUser);
  
-                return res.status(201).json({message: 'User registered succesfully'});
+                return res.status(201).json({ message: 'User registered succesfully' });
             } else if (userEmails.has(newUser.email)) {
-                return res.status(409).json({message: 'Email already exist'});
+                return res.status(409).json({ message: 'Email already exist' });
             } else if (userNames.has(newUser.name)) {
-                return res.status(409).json({message: 'Name already exist'});
+                return res.status(409).json({ message: 'Name already exist' });
             } else {
-                return res.status(503).json({message: 'Something went wrong. Please try later!'});
+                return res.status(503).json({ message: 'Something went wrong. Please try later!' });
             }
         } catch(error) {
             console.error('Error hashing password', error);
@@ -111,6 +111,36 @@ app.post('/Registration', async(req, res) => {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 });
+
+app.post('/Login', async (req, res) => {
+    const { name, password } = req.body;
+
+   if (name && password) {
+        try {
+            const existingUser = users.find(u => u.name === name);
+
+            if (!existingUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const isMatch = await bcryptjs.compare(password, existingUser.password);
+
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Incorrect password provided' });
+            }
+
+            console.log('Logged in user:', existingUser);
+            return res.status(201).json({ message: 'User logged in', user: existingUser });
+
+        } catch (error) {
+            console.error('Passwords matching error', error);
+            res.status(500).json({ message: 'Something went wrong. Please try later!' });
+        }
+    } else {
+        return res.status(400).json({ error: 'Missing login data' });
+    }
+
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
