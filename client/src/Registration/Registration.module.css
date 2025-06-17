@@ -144,6 +144,16 @@
                             font-size: 15px;
                         }
                     }
+                    input:-webkit-autofill {
+                        -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+                        -webkit-text-fill-color: var(--Elements) !important;
+                        color: var(--Elements) !important;
+                        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+                        font-size: 20px !important;
+                        padding: 10px 10px 10px 20px !important;
+                        border-radius: 8px !important;
+                        transition: background-color 5000s ease-in-out 0s;
+                    }   
                 }
             }
             .loginBodyFieldsDown {
