@@ -3,13 +3,12 @@ import classes from './Registration.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function Login() {
+export default function Registration() {
   const initialState = {
     email: '',
     name: '',
     password: '',
     repPassword: '',
-    remember: false
   };
 
   function reducer(state, action) {
@@ -23,10 +22,6 @@ export default function Login() {
 
   const handleChange = (e) => {
     dispatch({ name: e.target.name, value: e.target.value });
-  };
-
-  const handleCheckbox = () => {
-    dispatch({ name: 'remember', value: !state.remember });
   };
 
   const [error, setError] = useState({
@@ -159,7 +154,6 @@ export default function Login() {
         dispatch({ name: 'name', value: '' });
         dispatch({ name: 'password', value: '' });
         dispatch({ name: 'repPassword', value: '' });
-        dispatch({ name: 'remember', value: false });
 
         navigate('/Tasks');
       }
@@ -239,17 +233,6 @@ export default function Login() {
                 ref={repPasswordInputRef}
                 required
               />
-            </div>
-            <div className={classes.loginBodyFieldsDown}>
-              <div className={classes.loginBodyFieldsDownRemember}>
-                <input
-                  className={classes.loginBodyRadio}
-                  type="checkbox"
-                  checked={state.remember}
-                  onChange={handleCheckbox}
-                />
-                <span>Remember me</span>
-              </div>
             </div>
             <div className={classes.loginBodyButton}>
               <button type="submit">Registration</button>
