@@ -1,0 +1,154 @@
+.forgot {
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--Background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .forgotTitle {
+        width: 100%;
+        height: 30%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0;
+        h1 {
+            color: var(--Elements);
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            letter-spacing: 5px;
+            font-size: 40px;
+            
+            @media screen and (max-width: 727px){
+                letter-spacing: 3px;
+                font-size: 35px;    
+            }
+            @media screen and (max-width: 500px){
+                font-size: 30px;    
+            }
+        }
+        .forgotTitleLine {
+            width: 70%;
+            height: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--SecondaryEl);
+
+            @media screen and (max-width: 727px){
+                width: 80%;
+                height: 18px;
+            }
+            @media screen and (max-width: 500px){
+                width: 90%;
+            }
+        }
+    }
+    .forgotFields {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        h2 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 35px;
+            color: var(--Elements);
+            letter-spacing: 3px;
+
+            @media screen and (max-width: 727px){
+                letter-spacing: 2px;
+                font-size: 35px;    
+            }
+            @media screen and (max-width: 500px){
+                font-size: 30px;    
+            }
+        }
+        form {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            input {
+                width: 300px;
+                height: 25px;
+                border-radius: 8px;
+                border: none;
+                margin-top: 20px;
+                padding: 10px 10px 10px 20px;
+                font-size: 20px;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                color: var(--Elements);
+    
+                @media screen and (max-width: 1065px){
+                    width: 200px;
+                    height: 15px;  
+                    font-size: 15px;
+                }
+            }
+            input:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+                -webkit-text-fill-color: var(--Elements) !important;
+                color: var(--Elements) !important;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+                font-size: 20px !important;
+                padding: 10px 10px 10px 20px !important;
+                border-radius: 8px !important;
+                transition: background-color 5000s ease-in-out 0s;
+            }   
+            .forgotFieldsButton {
+                width: 100%;
+                height: auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                button {
+                    width: 200px;
+                    height: 35px;
+                    border-radius: 15px;
+                    border: none;
+                    background-color: var(--SecondaryEl);
+                    color: white;
+                    cursor: pointer;
+                    margin-top: 15px;
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 15px;
+                    letter-spacing: 2px;
+                }
+            }
+        }
+    }
+    .forgotBackToLogin {
+        width: 100%;
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        p {
+            color: var(--Elements);
+
+            @media screen and (max-width: 600px){
+                font-size: 15px;
+            }
+            @media screen and (max-width: 360px){
+                font-size: 13px;
+            }
+        }
+        .forgotBackToLoginLink   {
+            text-decoration: none;
+            color: var(--SecondaryEl);
+
+            @media screen and (max-width: 600px){
+                font-size: 15px;
+            }
+            @media screen and (max-width: 360px){
+                font-size: 13px;
+            }
+        }
+    }
+}
