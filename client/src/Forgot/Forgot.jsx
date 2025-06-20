@@ -1,5 +1,7 @@
-import { useReducer, useRef } from 'react'
-import classes from './Forgot.module.css'
+import { useReducer, useRef } from 'react';
+import classes from './Forgot.module.css';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Forgot() {
     const initialState = {
@@ -46,50 +48,60 @@ export default function Forgot() {
 
   return (
     <div className={classes.forgot}>
-        <div className={classes.forgotBody}>  
-            <div className={classes.forgotBodyTitle}>
-                <h1>Task Tracker</h1>
-            </div>
-            <div className={classes.forgotBodyLine}></div>
+        <div className={classes.forgotTitle}>
+            <h1>Task Tracker</h1>
+            <div className={classes.forgotTitleLine}></div>
+        </div>
 
-            <div className={classes.forgotBodyFields}>
-                <h2>Forgot Password</h2>
-                <form>
-                    <input 
-                        className={classes.input}
-                        type='email'
-                        placeholder='Email'
-                        name='email'
-                        value={email}
-                        onChange={handleChange}
-                        ref={emailInputRef}
-                        onKeyDown={handleKeyDown(e, newPasswordInputRef)}
-                        required
-                    />
-                    <input
-                        className={classes.input}
-                        type='password'
-                        placeholder='New Password'
-                        name='password'
-                        value={newPassword}
-                        onChange={handleChange}
-                        ref={newPasswordInputRef}
-                        onKeyDown={handleKeyDown(e, repNewPasswordInputRef)}
-                        required
-                    />
-                    <input
-                        className={classes.input}
-                        type='password'
-                        placeholder='Repeat New Password'
-                        name='reNewPassword'
-                        value={repNewPassword}
-                        onChange={handleChange}
-                        ref={repNewPasswordInputRef}
-                        onKeyDown={handleKeyDown(e, undefined)}
-                        required
-                    />
-                </form>
-            </div>
+        <div className={classes.forgotFields}>
+            <h2>Forgot Password</h2>
+            <form>
+                <input 
+                    className={classes.input}
+                    type='email'
+                    placeholder='Email'
+                    name='email'
+                    value={state.email}
+                    onChange={handleChange}
+                    ref={emailInputRef}
+                    onKeyDown={(e) => handleKeyDown(e, newPasswordInputRef)}
+                    required
+                />
+                <input
+                    className={classes.input}
+                    type='password'
+                    placeholder='New Password'
+                    name='password'
+                    value={state.newPassword}
+                    onChange={handleChange}
+                    ref={newPasswordInputRef}
+                    onKeyDown={(e) => handleKeyDown(e, repNewPasswordInputRef)}
+                    required
+                />
+                <input
+                    className={classes.input}
+                    type='password'
+                    placeholder='Repeat New Password'
+                    name='reNewPassword'
+                    value={state.repNewPassword}
+                    onChange={handleChange}
+                    ref={repNewPasswordInputRef}
+                    onKeyDown={(e) => handleKeyDown(e, undefined)}
+                    required
+                />
+
+                <div className={classes.forgotFieldsButton}>
+                    <button>Continue</button>
+                </div>
+            </form>
+        </div>
+
+        <div className={classes.forgotBackToLogin}>
+            <p>Back to</p>
+            <Link
+                className={classes.forgotBackToLoginLink}
+                to='/Login'
+            >Login</Link>
         </div>
     </div>
   )
