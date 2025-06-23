@@ -38,6 +38,12 @@ export default function Forgot() {
 
     const [forgotError, setForgotError] = useState('');
 
+    const [confirm, setConfirm] = useState(false);
+
+    const toggleConfim = () => {
+        setConfirm((confirm) => !confirm)
+    };
+
     const emailInputRef = useRef();
     const newPasswordInputRef = useRef();
     const repNewPasswordInputRef = useRef();
@@ -142,7 +148,10 @@ export default function Forgot() {
         <div className={classes.forgotFields}>
             <h2>Forgot Password</h2>
             {forgotError && <p className={classes.forgotError}>{forgotError}</p>}
-            <form onSubmit={handleSubmit}>
+            <form 
+                className={`${confirm ? classes.passiveInitialForm : classes.initialForm}` }
+                onSubmit={handleSubmit}
+            >
                 <div className={classes.inputDiv}>
                     {error.emailError && <p className={classes.errorMessage}>{error.emailError}</p>}
                     <input 
@@ -186,7 +195,20 @@ export default function Forgot() {
                     />
                 </div>
                 <div className={classes.forgotFieldsButton}>
-                    <button type='submit'>Continue</button>
+                    <button type='submit' onClick={toggleConfim}>Continue</button>
+                </div>
+            </form>
+
+            <form className={`${classes.secondForm} ${confirm ? classes.activeSecondForm : ''}`}>
+                <div class={classes.verificationDiv}>
+                    <input type="text" id="digit1" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
+                    <input type="text" id="digit2" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
+                    <input type="text" id="digit3" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
+                    <input type="text" id="digit4" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
+                </div>
+
+                <div className={classes.verificationButton}>
+                    <button>Confirm</button>
                 </div>
             </form>
         </div>
