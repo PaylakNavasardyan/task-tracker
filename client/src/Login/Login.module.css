@@ -107,10 +107,16 @@
                 -webkit-text-fill-color: var(--Elements) !important;
                 color: var(--Elements) !important;
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
-                font-size: 20px !important;
+                font-size: 20px;
                 padding: 10px 10px 10px 20px !important;
                 border-radius: 8px !important;
                 transition: background-color 5000s ease-in-out 0s;
+
+                @media screen and (max-width: 1065px){
+                    width: 200px;
+                    height: 15px;  
+                    font-size: 15px;
+                }
             }   
             .loginBodyFieldsDown {
                 width: 100%;
