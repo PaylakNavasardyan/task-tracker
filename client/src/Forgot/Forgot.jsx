@@ -1,9 +1,12 @@
-import { useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import classes from './Forgot.module.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Forgot() {
+
+    // Input fields with useReducer hook
+
     const initialState = {
         email: '',
         newPassword: '',
@@ -23,6 +26,8 @@ export default function Forgot() {
         dispatch({ name: e.target.name, value: e.target.value })
     };
 
+    // Error states with useState + object 
+
     const [error, setError] = useState({
         emailError: '',
         newPasswordError: '',
@@ -36,13 +41,19 @@ export default function Forgot() {
         }))
     };
 
+    // Error due to server side
+
     const [forgotError, setForgotError] = useState('');
+
+    // Checking if the state is in its initial segment
 
     const [confirm, setConfirm] = useState(false);
 
     const toggleConfim = () => {
         setConfirm((confirm) => !confirm)
     };
+
+    // Focus on an input field after the "Enter" key is pressed
 
     const emailInputRef = useRef();
     const newPasswordInputRef = useRef();
@@ -54,6 +65,43 @@ export default function Forgot() {
             nextRef?.current?.focus()
         }
     };
+
+    // Focus on an numeral input field
+
+    const inputRefs = useRef([]);
+
+    useEffect(() => {
+        inputRefs.current.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (!/^\d$/.test(e.target.value) && e.target.value !== '') {
+                    e.target.value = '';
+                    return;
+                };
+
+                if (e.target.value.length === 1 && index < inputRefs.current.length - 1) {
+                    inputRefs.current[index + 1].focus();
+                }
+
+                checkInputsFilled()
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    inputRefs.current[index - 1].focus();
+                }
+            })
+        })
+
+        function checkInputsFilled() {
+            const allDigits = inputRefs.current.map(input => input.value).join('');
+
+            if (allDigits.length === 4) {
+                console.log('Code entered', allDigits)
+            }
+        }
+    }, []);
+
+    // Validation checking
 
     const validEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -114,7 +162,6 @@ export default function Forgot() {
         }
 
         try {
-            console.log('before axios')
             const res = await axios.post('http://localhost:5000/Forgot', state);
 
             console.log(res)
@@ -201,10 +248,15 @@ export default function Forgot() {
 
             <form className={`${classes.secondForm} ${confirm ? classes.activeSecondForm : ''}`}>
                 <div class={classes.verificationDiv}>
-                    <input type="text" id="digit1" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
-                    <input type="text" id="digit2" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
-                    <input type="text" id="digit3" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
-                    <input type="text" id="digit4" maxlength="1" pattern="[0-9]" inputmode="numeric" autoComplete='off'/>
+                    {[0, 1, 2, 3].map((_, i) => (
+                        <input
+                        key={i}
+                        type="text"
+                        maxLength="1"
+                        ref={el => inputRefs.current[i] = el}
+                        autoComplete='off'
+                        />
+                    ))}
                 </div>
 
                 <div className={classes.verificationButton}>
