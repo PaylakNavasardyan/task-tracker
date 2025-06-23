@@ -148,7 +148,6 @@ export default function Registration() {
       if (res.status === 201) {
         document.cookie = `email=${state.email}; path=/`;
         document.cookie = `name=${state.name}; path=/`;
-        document.cookie = `remember me=${state.remember}; path=/`;
 
         dispatch({ name: 'email', value: '' });
         dispatch({ name: 'name', value: '' });
