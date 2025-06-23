@@ -23,7 +23,6 @@ app.get('/', (req, res) => {
                     <td>${user.name}</td>
                     <td>${user.email}</td>
                     <td>${user.password}</td>
-                    <td>${user.remember}</td>
                 </tr>
             `)
             .join('');
@@ -58,7 +57,6 @@ app.get('/', (req, res) => {
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Hashed Password</th>
-                                <th>Remember</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,7 +72,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/Registration', async(req, res) => {
-    const { email, name, password, repPassword, remember } = req.body;
+    const { email, name, password, repPassword } = req.body;
 
     if (email && name && password && repPassword) {
         try {
@@ -84,7 +82,6 @@ app.post('/Registration', async(req, res) => {
                 email,
                 name,
                 password: hashedPassword,
-                remember
             };
 
             const userEmails = new Set(users.map(u => u.email));
@@ -139,7 +136,37 @@ app.post('/Login', async (req, res) => {
     } else {
         return res.status(400).json({ error: 'Missing login data' });
     }
+})
 
+app.post('/Forgot', async (req, res) => {
+    const { email, newPassword, repNewPassword } = req.body;
+
+    if (email && newPassword && repNewPassword) {
+        try {
+            const existedUserIndex = users.findIndex(u => u.email === email);
+            if (existedUserIndex === -1) {
+                return res.status(404).json({ message: 'User not found' })
+            }
+
+            const hashedNewPassword = await bcryptjs.hash(newPassword, saltԼevel);
+            const userRegisteredEmail = new Set(users.map(u => u.email));
+            if (userRegisteredEmail.has(email))     {
+                console.log('Email found');
+                
+                users[existedUserIndex] = {
+                    name: users[existedUserIndex].name,
+                    email,
+                    password: hashedNewPassword
+                };
+                res.status(201).json({ message: 'Email found' })
+            } else if (!userRegisteredEmail) {
+                console.log('Email not found')
+                res.status(401).json({ message: 'You must enter the email address you used to register' })
+            } 
+        } catch(error) {
+            console.error(error)
+        }
+    }
 })
 
 app.listen(PORT, () => {
