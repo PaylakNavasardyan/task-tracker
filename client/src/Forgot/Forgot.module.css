@@ -74,7 +74,70 @@
                 font-size: 20px;
             }
         }
-        form {
+        .secondForm {
+            display: none;
+        }
+        .activeSecondForm {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            .verificationDiv {
+                width: 100%;
+                height: auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                @media screen and (max-width: 500px){
+                    display: grid;
+                    grid-template-columns: auto auto;
+                }
+                input {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 10px;
+                    border: none;
+                    margin: 20px;
+                    text-align: center;
+                    font-size: 40px;
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    color: var(--Elements);
+    
+                    @media screen and (max-width: 727px){
+                        width: 40px;
+                        height: 40px;
+                        font-size: 30px;
+                    }
+                }
+            }
+            .verificationButton {
+                width: 100%;
+                height: auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                button {
+                    width: 200px;
+                    height: 35px;
+                    border-radius: 15px;
+                    border: none;
+                    background-color: var(--SecondaryEl);
+                    color: white;
+                    cursor: pointer;
+                    margin-top: 50px;
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 15px;
+                    letter-spacing: 2px;
+                }
+            }
+        }
+        .passiveInitialForm {
+            display: none;
+        }
+        .initialForm {
             width: 100%;
             height: auto;
             display: flex;
