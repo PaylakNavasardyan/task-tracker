@@ -75,15 +75,25 @@
             }
         }
         .secondForm {
-            display: none;
+            visibility: hidden; 
+            height: 0;          
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(200px);
+            transition: all 0.4s ease-in-out;
+            pointer-events: none;
         }
         .activeSecondForm {
             width: 100%;
             height: auto;
+            visibility: visible;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
             .verificationDiv {
                 width: 100%;
                 height: auto;
