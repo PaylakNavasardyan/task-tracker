@@ -145,7 +145,7 @@ app.post('/Forgot', async (req, res) => {
         try {
             const existedUserIndex = users.findIndex(u => u.email === email);
             if (existedUserIndex === -1) {
-                return res.status(404).json({ message: 'User not found' })
+                return res.status(404).json({ message: 'Email not found' })
             }
 
             const hashedNewPassword = await bcryptjs.hash(newPassword, saltԼevel);
@@ -158,6 +158,9 @@ app.post('/Forgot', async (req, res) => {
                     email,
                     password: hashedNewPassword
                 };
+
+                console.log('Updated users', users);
+
                 res.status(201).json({ message: 'Email found' })
             } else if (!userRegisteredEmail) {
                 console.log('Email not found')
