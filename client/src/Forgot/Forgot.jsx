@@ -23,7 +23,8 @@ export default function Forgot() {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleChange = (e) => {
-        dispatch({ name: e.target.name, value: e.target.value })
+        dispatch({ name: e.target.name, value: e.target.value });
+        setForgotError('')
     };
 
     // Error states with useState + object 
@@ -45,7 +46,7 @@ export default function Forgot() {
 
     const [forgotError, setForgotError] = useState('');
 
-    // Checking if the state is in its initial segment
+    // Checking if the state is in initial segment
 
     const [confirm, setConfirm] = useState(false);
 
@@ -128,26 +129,28 @@ export default function Forgot() {
         };
 
         if (!startsWithLetterRegex.test(password)) {
-        return 'Password must start with Latin letter';
+            return 'Password must start with Latin letter';
         } else if (!passCharactersRegex.test(password)) {
-        return 'Password can contain only Latin letters numbers and (-, _, .)';
+            return 'Password can contain only Latin letters numbers and (-, _, .)';
         } else if (password.length < 6) {
-        return 'Password cannot contain fewer than 6 characters';
+            return 'Password cannot contain fewer than 6 characters';
         } else if (password.length > 15) {
-        return 'Password cannot contain more than 15 characters';
+            return 'Password cannot contain more than 15 characters';
         }
         return '';
     };
 
     const validRepNewPassword = (password, repPassword) => {
         if (repPassword !== password) {
-        return 'Repeat Password does not match with Password';
+            return 'Repeat Password does not match with Password';
         }
         return '';
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setForgotError('');
 
         const aprrovedEmailError = validEmail(state.email);
         const approvedNewPasswordError = validNewPassword(state.newPassword);
@@ -171,6 +174,8 @@ export default function Forgot() {
                 dispatch({ name: 'email', value: '' });
                 dispatch({ name: 'newPassword', value: '' });
                 dispatch({ name: 'repNewPassword', value: '' });
+
+                toggleConfim();
 
                 console.log(res.data)
             } 
@@ -242,7 +247,7 @@ export default function Forgot() {
                     />
                 </div>
                 <div className={classes.forgotFieldsButton}>
-                    <button type='submit' onClick={toggleConfim}>Continue</button>
+                    <button>Continue</button>
                 </div>
             </form>
 
