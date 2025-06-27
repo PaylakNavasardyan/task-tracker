@@ -2,15 +2,18 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bcryptjs from 'bcryptjs';
+import { sendVerificationCode, generateCode } from './verificationCode.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5050;
 const saltԼevel  = 10;
+const router = express.Router();
 
 app.use(cors());
 app.use(express.json());
+app.use('/', router);
 
 let users = [];
 
@@ -138,18 +141,20 @@ app.post('/Login', async (req, res) => {
     }
 })
 
-app.post('/Forgot', async (req, res) => {
+router.post('/Forgot', async (req, res) => {
     const { email, newPassword, repNewPassword } = req.body;
 
     if (email && newPassword && repNewPassword) {
         try {
             const existedUserIndex = users.findIndex(u => u.email === email);
+            
             if (existedUserIndex === -1) {
                 return res.status(404).json({ message: 'Email not found' })
             }
 
             const hashedNewPassword = await bcryptjs.hash(newPassword, saltԼevel);
             const userRegisteredEmail = new Set(users.map(u => u.email));
+
             if (userRegisteredEmail.has(email))     {
                 console.log('Email found');
                 
@@ -161,7 +166,13 @@ app.post('/Forgot', async (req, res) => {
 
                 console.log('Updated users', users);
 
-                res.status(201).json({ message: 'Email found' })
+                const code = generateCode();
+                const success = await sendVerificationCode(email, code);
+
+                if (success) {
+                    res.status(201).json({ message: 'Email found' })
+                }
+
             } else if (!userRegisteredEmail) {
                 console.log('Email not found')
                 res.status(401).json({ message: 'You must enter the email address you used to register' })
