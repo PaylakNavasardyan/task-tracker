@@ -24,7 +24,6 @@ export default function Forgot() {
 
     const handleChange = (e) => {
         dispatch({ name: e.target.name, value: e.target.value });
-        setForgotError('')
     };
 
     // Error states with useState + object 
@@ -102,6 +101,10 @@ export default function Forgot() {
         }
     }, []);
 
+    // Waiting part, when verification code sending into email
+
+    const [isLoading, setIsLoading] = useState(false);
+
     // Validation checking
 
     const validEmail = (email) => {
@@ -161,8 +164,10 @@ export default function Forgot() {
         updateError('repNewPasswordError', approvedRepNewPasswordError);
 
         if (aprrovedEmailError || approvedNewPasswordError || approvedRepNewPasswordError) {
+            setIsLoading(false);
             return;
         }
+        setIsLoading(true);
 
         try {
             const res = await axios.post('http://localhost:5000/Forgot', state);
@@ -200,6 +205,11 @@ export default function Forgot() {
         <div className={classes.forgotFields}>
             <h2>Forgot Password</h2>
             {forgotError && <p className={classes.forgotError}>{forgotError}</p>}
+            {!forgotError && isLoading &&
+                <p className={`${confirm ? classes.hiddenLoading : classes.loading}`}>
+                    Sending code to your email…
+                </p>
+            }
             <form 
                 className={`${confirm ? classes.passiveInitialForm : classes.initialForm}` }
                 onSubmit={handleSubmit}
