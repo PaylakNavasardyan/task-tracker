@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import classes from './Forgot.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Forgot() {
@@ -10,7 +10,8 @@ export default function Forgot() {
     const initialState = {
         email: '',
         newPassword: '',
-        repNewPassword: ''
+        repNewPassword: '',
+        validationCode: ['', '', '', '']
     };
 
     function reducer(state, action) {
@@ -26,39 +27,40 @@ export default function Forgot() {
         dispatch({ name: e.target.name, value: e.target.value });
     };
 
+    
     // Error states with useState + object 
-
+    
     const [error, setError] = useState({
         emailError: '',
         newPasswordError: '',
         repNewPasswordError: ''
     });
-
+    
     const updateError = (field, message) => {
         setError(prev => ({
             ...prev,
             [field]: message
         }))
     };
-
+    
     // Error due to server side
-
+    
     const [forgotError, setForgotError] = useState('');
-
+    
     // Checking if the state is in initial segment
-
+    
     const [confirm, setConfirm] = useState(false);
-
+    
     const toggleConfim = () => {
         setConfirm((confirm) => !confirm)
     };
-
+    
     // Focus on an input field after the "Enter" key is pressed
-
+    
     const emailInputRef = useRef();
     const newPasswordInputRef = useRef();
     const repNewPasswordInputRef = useRef();
-
+    
     const handleKeyDown = (e, nextRef) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -67,9 +69,9 @@ export default function Forgot() {
     };
 
     // Focus on an numeral input field
-
+    
     const inputRefs = useRef([]);
-
+    
     useEffect(() => {
         inputRefs.current.forEach((input, index) => {
             input.addEventListener('input', (e) => {
@@ -77,33 +79,48 @@ export default function Forgot() {
                     e.target.value = '';
                     return;
                 };
-
+                
                 if (e.target.value.length === 1 && index < inputRefs.current.length - 1) {
                     inputRefs.current[index + 1].focus();
                 }
-
+                
                 checkInputsFilled()
             });
-
+            
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
                     inputRefs.current[index - 1].focus();
                 }
             })
         })
-
+        
         function checkInputsFilled() {
             const allDigits = inputRefs.current.map(input => input.value).join('');
-
+            
             if (allDigits.length === 4) {
                 console.log('Code entered', allDigits)
             }
         }
     }, []);
+    
+    // Handle change for numeral input fields
 
+    const handleCodeChange = (e, index) => {
+        const value = e.target.value;
+
+        const updateCode = [...state.validationCode];
+        updateCode[index] = value;
+
+        dispatch({ name: 'validationCode', value: updateCode })
+    };
+    
     // Waiting part, when verification code sending into email
 
     const [isLoading, setIsLoading] = useState(false);
+
+    // Navigation to tasks
+
+    const navigation = useNavigate();
 
     // Validation checking
 
@@ -151,49 +168,76 @@ export default function Forgot() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
+    setForgotError('');
 
-        setForgotError('');
+    const approvedEmailError = validEmail(state.email);
+    const approvedNewPasswordError = validNewPassword(state.newPassword);
+    const approvedRepNewPasswordError = validRepNewPassword(state.newPassword, state.repNewPassword);
 
-        const aprrovedEmailError = validEmail(state.email);
-        const approvedNewPasswordError = validNewPassword(state.newPassword);
-        const approvedRepNewPasswordError = validRepNewPassword(state.newPassword, state.repNewPassword);
+    updateError('emailError', approvedEmailError);
+    updateError('newPasswordError', approvedNewPasswordError);
+    updateError('repNewPasswordError', approvedRepNewPasswordError);
 
-        updateError('emailError', aprrovedEmailError);
-        updateError('newPasswordError', approvedNewPasswordError);
-        updateError('repNewPasswordError', approvedRepNewPasswordError);
+    if (approvedEmailError || approvedNewPasswordError || approvedRepNewPasswordError) {
+        setIsLoading(false);
+        return;
+    }
 
-        if (aprrovedEmailError || approvedNewPasswordError || approvedRepNewPasswordError) {
-            setIsLoading(false);
-            return;
+    setIsLoading(true);
+
+    try {
+        let requestData = {
+            email: state.email,
+            newPassword: state.newPassword,
+            repNewPassword: state.repNewPassword
+        };
+
+        if (confirm) {
+            requestData.validationCode = state.validationCode.join('');
         }
-        setIsLoading(true);
 
-        try {
-            const res = await axios.post('http://localhost:5000/Forgot', state);
+        const res = await axios.post('http://localhost:5000/Forgot', requestData);
 
-            console.log(res)
-            if (res.status === 201) {
-                document.cookie = `email=${state.email}; path=/`;
-        
-                dispatch({ name: 'email', value: '' });
-                dispatch({ name: 'newPassword', value: '' });
-                dispatch({ name: 'repNewPassword', value: '' });
+        console.log(res);
 
-                toggleConfim();
-
-                console.log(res.data)
-            } 
-        } catch(error) {
-            if (error.response && [401, 404].includes(error.response.status)) {
-                setForgotError(error.response.data.message)
-                console.log('Something went wrong!')
+        if (res.status === 200) {
+            toggleConfim();
+        } else if (res.status === 201) {
+            document.cookie = `email=${state.email}; path=/`;
+            navigation('/Tasks');
+        } 
+    } catch (error) {
+            if (error.response && [400, 401, 404, 500].includes(error.response.status)) {
+                setForgotError(error.response.data.message || 'Something went wrong');
             } else {
                 setForgotError('Network error or server not responding');
             }
             console.error('error', error);
+        } finally {
+            setIsLoading(false);
         }
+
     };
+
+    const handleVerifySubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        const res = await axios.post('http://localhost:5000/Forgot', {
+            ...state,
+            validationCode: state.validationCode.join('')
+        });
+
+        if (res.status === 201) {
+            document.cookie = `email=${state.email}; path=/`;
+            navigation('/Tasks');
+        }
+    } catch (error) {
+        setForgotError('Verification failed');
+        console.error(error);
+    }
+};
 
   return (
     <div className={classes.forgot}>
@@ -261,15 +305,20 @@ export default function Forgot() {
                 </div>
             </form>
 
-            <form className={`${classes.secondForm} ${confirm ? classes.activeSecondForm : ''}`}>
+            <form 
+                className={`${classes.secondForm} ${confirm ? classes.activeSecondForm : ''}`}
+                onSubmit={handleVerifySubmit}    
+            >
                 <div class={classes.verificationDiv}>
                     {[0, 1, 2, 3].map((_, i) => (
                         <input
-                        key={i}
-                        type="text"
-                        maxLength="1"
-                        ref={el => inputRefs.current[i] = el}
-                        autoComplete='off'
+                            key={i}
+                            type="text"
+                            maxLength="1"
+                            onChange={(e) => handleCodeChange (e, i)}
+                            ref={el => inputRefs.current[i] = el}
+                            autoComplete='off'
+                            value={state.validationCode[i] || ''}
                         />
                     ))}
                 </div>
@@ -279,7 +328,7 @@ export default function Forgot() {
                 </div>
             </form>
         </div>
-
+        
         <div className={classes.forgotBackToLogin}>
             <p>Back to</p>
             <Link
