@@ -141,48 +141,61 @@ app.post('/Login', async (req, res) => {
     }
 })
 
+const verificationCodes = new Map();
+
 router.post('/Forgot', async (req, res) => {
-    const { email, newPassword, repNewPassword } = req.body;
+    const { email, newPassword, repNewPassword, validationCode } = req.body;
 
-    if (email && newPassword && repNewPassword) {
-        try {
-            const existedUserIndex = users.findIndex(u => u.email === email);
-            
-            if (existedUserIndex === -1) {
-                return res.status(404).json({ message: 'Email not found' })
-            }
-
-            const hashedNewPassword = await bcryptjs.hash(newPassword, saltԼevel);
-            const userRegisteredEmail = new Set(users.map(u => u.email));
-
-            if (userRegisteredEmail.has(email))     {
-                console.log('Email found');
-                
-                users[existedUserIndex] = {
-                    name: users[existedUserIndex].name,
-                    email,
-                    password: hashedNewPassword
-                };
-
-                console.log('Updated users', users);
-
-                const code = generateCode();
-                const success = await sendVerificationCode(email, code);
-
-                if (success) {
-                    res.status(201).json({ message: 'Email found' })
-                }
-
-            } else if (!userRegisteredEmail) {
-                console.log('Email not found')
-                res.status(401).json({ message: 'You must enter the email address you used to register' })
-            } 
-        } catch(error) {
-            console.error(error)
-        }
+    if (!email || !newPassword || !repNewPassword) {
+        return res.status(400).json({ message: 'Missing fields' });
     }
-})
 
+    try {
+        const existedUserIndex = users.findIndex(u => u.email === email);
+        if (existedUserIndex === -1) {
+            return res.status(404).json({ message: 'Email not found' });
+        }
+
+        const hashedNewPassword = await bcryptjs.hash(newPassword, saltԼevel);
+
+        if (!validationCode) {
+            const code = generateCode();
+            const hashedCode = await bcryptjs.hash(code, saltԼevel);
+            verificationCodes.set(email, hashedCode);
+
+            const success = await sendVerificationCode(email, code);
+            if (success) {
+                return res.status(200).json({ message: 'Verification code sent' });
+            } else {
+                return res.status(500).json({ message: 'Failed to send email' });
+            }
+        }
+
+        const storedCodeData = verificationCodes.get(email);
+        if (!storedCodeData) {
+            return res.status(400).json({ message: 'No code found for this email' });
+        }
+
+        const isCodeMatch = await bcryptjs.compare(validationCode, storedCodeData);
+        if (!isCodeMatch) {
+            return res.status(401).json({ message: 'Invalid verification code' });
+        }
+
+        users[existedUserIndex] = {
+            name: users[existedUserIndex].name,
+            email,
+            password: hashedNewPassword
+        };
+
+        verificationCodes.delete(email); 
+        return res.status(201).json({ message: 'Password reset successful' });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+ 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
