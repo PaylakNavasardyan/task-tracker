@@ -3,6 +3,7 @@ import './App.css';
 import Login from './Login/Login';
 import Registration from './Registration/Registration';
 import Forgot from './Forgot/Forgot';
+import Tasks from './Tasks/Tasks';
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
 
           <Route path={'/Forgot'} element = {
             <Forgot />
+          }/>
+
+          <Route path={'/Tasks'} element = {
+            <Tasks />
           }/>
         </Routes>
       </BrowserRouter>
