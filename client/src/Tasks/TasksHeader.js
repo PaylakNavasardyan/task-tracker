@@ -1,13 +1,71 @@
+import { useState } from 'react'
 import classes from './TasksHeader.module.css'
-import { IoMdSettings } from "react-icons/io"
+import { IoMdSettings, IoIosLogOut } from "react-icons/io"
+import { BiLogoGmail } from "react-icons/bi";
+import { MdDriveFileRenameOutline, MdDelete  } from "react-icons/md";
 
 export default function TasksHeader() {
+    const [show, setShow] = useState(false)
+    
+    const handleClick = () => {
+        setShow((show) => !show)
+    };
+    
+    function getCookie(name) {
+        const cookieName = name + '=';
+        const cookiesArray = document.cookie.split(';');
+
+        for (let i = 0; i < cookiesArray.length; i++) {
+            let cookie = cookiesArray[i];
+
+            cookie = cookie.trim();
+
+            if (cookie.indexOf(cookieName) === 0) {
+                return cookie.substring(cookieName.length);
+            }
+        }
+         return null; 
+    }
+
+    const userEmail = getCookie('email');
+    console.log('User Email from Cookie:', userEmail);
+
   return (
     <div className={classes.header}>  
         <h2>Task Tracker</h2>
 
         <div className={classes.headerBodySettingIcon}>
-            <IoMdSettings className={classes.settingIcon} size={'25px'}/>
+            <IoMdSettings 
+                size={'25px'}
+                cursor={'pointer'}
+                onClick={handleClick}    
+            />
+            <div className={show ? classes.settingMenu : classes.hiddenSettingMenu}>
+                <div className={classes.settingMenuGmail}>
+                    <BiLogoGmail 
+                        size={'20px'}
+                    />
+                    {userEmail}
+                </div>
+                <div className={classes.settingSmallIcon}>
+                    <MdDriveFileRenameOutline 
+                        size={'20px'}
+                    />
+                    <p>Rename</p>
+                </div>
+                <div className={classes.settingSmallIcon}>
+                    <IoIosLogOut 
+                        size={'20px'}
+                    />
+                    <p>Log Out</p>
+                </div>
+                <div className={classes.settingSmallIcon}>
+                    <MdDelete 
+                        size={'20px'}
+                    />
+                    <p>Delete Account</p>
+                </div>
+            </div>
         </div>
     </div>
   )
