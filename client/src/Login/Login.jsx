@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
-    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
 
@@ -12,7 +12,7 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    const nameInputRef = useRef();
+    const emailInputRef = useRef();
     const passwordInputRef = useRef();
 
     const handleKeyDown = (e, nextRef) => {
@@ -27,7 +27,7 @@ export default function Login() {
     };
 
     const payload = {
-      name,
+      email,
       password,
       remember
     }
@@ -39,10 +39,10 @@ export default function Login() {
         const res = await axios.post('http://localhost:5000/Login', payload)
 
         if (res.status === 201) {
-          document.cookie = `name=${name}; path=/`;
-          document.cookie = `remember me=${remember}; path=/`;
+          document.cookie = `email=${email}; path=/`;
+          localStorage.setItem('remember', remember.toStrin());
 
-          setName('');
+          setEmail('');
           setPassword('');
           setRemember(false);
 
@@ -72,12 +72,12 @@ export default function Login() {
               <input 
                   className={classes.input}
                   type="text"
-                  placeholder='Username'
-                  name='name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  placeholder='Email'
+                  name='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => handleKeyDown(e, passwordInputRef)}
-                  ref={nameInputRef}
+                  ref={emailInputRef}
                   required
               />
               <input 
