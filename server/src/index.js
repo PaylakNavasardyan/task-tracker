@@ -113,11 +113,11 @@ app.post('/Registration', async(req, res) => {
 });
 
 app.post('/Login', async (req, res) => {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
-   if (name && password) {
+    if (email && password) {
         try {
-            const existingUser = users.find(u => u.name === name);
+            const existingUser = users.find(u => u.email === email);
 
             if (!existingUser) {
                 return res.status(404).json({ message: 'User not found' });
