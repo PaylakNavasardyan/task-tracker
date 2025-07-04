@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import Login from './Login/Login';
 import Registration from './Registration/Registration';
@@ -6,13 +6,16 @@ import Forgot from './Forgot/Forgot';
 import Tasks from './Tasks/Tasks';
 
 function App() {
+  const remember = localStorage.getItem('remember');
+  const isLoggedIn = remember === 'true';
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path={'/'} element = {
-            <Login />
-          }/>
+          <Route path={'/'} element = 
+            { isLoggedIn ? <Navigate to='/Tasks' replace /> : <Login /> }
+          />
           
           <Route path={'/Registration'} element = {
             <Registration />
@@ -22,9 +25,9 @@ function App() {
             <Forgot />
           }/>
 
-          <Route path={'/Tasks'} element = {
-            <Tasks />
-          }/>
+          <Route path={'/Tasks'} element = 
+            { isLoggedIn ? <Tasks /> : <Navigate to='/' replace /> }
+          />
         </Routes>
       </BrowserRouter>
     </div>
