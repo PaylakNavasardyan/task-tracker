@@ -3,9 +3,12 @@ import classes from './TasksHeader.module.css'
 import { IoMdSettings, IoIosLogOut } from "react-icons/io"
 import { BiLogoGmail } from "react-icons/bi";
 import { MdDriveFileRenameOutline, MdDelete  } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 export default function TasksHeader() {
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
+
+    const navigate = useNavigate();
     
     const handleClick = () => {
         setShow((show) => !show)
@@ -30,16 +33,22 @@ export default function TasksHeader() {
     const userEmail = getCookie('email');
     console.log('User Email from Cookie:', userEmail);
 
+    const onLogOutClikc = () => {
+        navigate('/Login')
+    };
+
   return (
     <div className={classes.header}>  
         <h2>Task Tracker</h2>
 
         <div className={classes.headerBodySettingIcon}>
-            <IoMdSettings 
-                size={'25px'}
-                cursor={'pointer'}
-                onClick={handleClick}    
-            />
+            <div className={classes.setting}>
+                <IoMdSettings 
+                    size={'25px'}
+                    cursor={'pointer'}
+                    onClick={handleClick}    
+                />    
+            </div>    
             <div className={show ? classes.settingMenu : classes.hiddenSettingMenu}>
                 <div className={classes.settingMenuGmail}>
                     <BiLogoGmail 
@@ -57,7 +66,7 @@ export default function TasksHeader() {
                     <IoIosLogOut 
                         size={'20px'}
                     />
-                    <p>Log Out</p>
+                    <p  onClick={onLogOutClikc}>Log Out</p>
                 </div>
                 <div className={classes.settingSmallIcon}>
                     <MdDelete 
