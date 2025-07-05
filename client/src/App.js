@@ -13,21 +13,11 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path={'/'} element = 
-            { isLoggedIn ? <Navigate to='/Tasks' replace /> : <Login /> }
-          />
-          
-          <Route path={'/Registration'} element = {
-            <Registration />
-          }/>
-
-          <Route path={'/Forgot'} element = {
-            <Forgot />
-          }/>
-
-          <Route path={'/Tasks'} element = 
-            { isLoggedIn ? <Tasks /> : <Navigate to='/' replace /> }
-          />
+          <Route path="/" element={<Navigate to={isLoggedIn ? "/Tasks" : "/Login"} replace />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Registration" element={<Registration />} />
+          <Route path="/Forgot" element={<Forgot />} />
+          <Route path="/Tasks" element={isLoggedIn ? <Tasks /> : <Navigate to="/Login" replace />} />
         </Routes>
       </BrowserRouter>
     </div>
