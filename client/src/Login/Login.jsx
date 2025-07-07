@@ -40,7 +40,8 @@ export default function Login() {
 
         if (res.status === 201) {
           document.cookie = `email=${email}; path=/`;
-          localStorage.setItem('remember', remember.toStrin());
+          localStorage.setItem('remember', remember.toString());
+          localStorage.setItem('loggedIn', 'true');
 
           setEmail('');
           setPassword('');
