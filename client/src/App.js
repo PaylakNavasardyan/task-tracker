@@ -6,8 +6,7 @@ import Forgot from './Forgot/Forgot';
 import Tasks from './Tasks/Tasks';
 
 function App() {
-  const remember = localStorage.getItem('remember');
-  const isLoggedIn = remember === 'true';
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
   return (
     <div className="App">
