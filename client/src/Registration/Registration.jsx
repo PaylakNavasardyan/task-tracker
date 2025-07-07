@@ -154,7 +154,8 @@ export default function Registration() {
         dispatch({ name: 'password', value: '' });
         dispatch({ name: 'repPassword', value: '' });
 
-        navigate('/Tasks');
+        localStorage.setItem('remember', 'true');
+        navigate('/Tasks', { replace: true });
       }
     } catch (error) {
       if (error.response && (error.response.status === 409 || error.response.status === 503)) {
