@@ -242,7 +242,7 @@ export default function Registration() {
       </div>
       <div className={classes.loginBackToLogin}>
         <p>Back to</p>
-        <Link className={classes.loginBackToLoginLink} to="/">
+        <Link className={classes.loginBackToLoginLink} to="/Login">
           Login
         </Link>
       </div>

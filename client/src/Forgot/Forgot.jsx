@@ -333,7 +333,7 @@ export default function Forgot() {
             <p>Back to</p>
             <Link
                 className={classes.forgotBackToLoginLink}
-                to='/'
+                to='/Login'
             >Login</Link>
         </div>
     </div>
